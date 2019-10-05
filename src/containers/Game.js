@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import AppHeader from '../components/AppHeader';
 import AppFooter from '../components/AppFooter';
 import Wall from '../components/Wall';
+import { toBlob, toJson } from '../helpers/communication';
 
 export default class Game extends Component {
   constructor() {
@@ -17,25 +18,24 @@ export default class Game extends Component {
     this.ws.onopen = () => {
       console.log('connected');
 
-      var debug = { type: "getRooms" };
-      var blob = new Blob([JSON.stringify(debug, null, 2)], { type: 'application/json' });
+      var debug = { type: "newRoom" };
 
-      this.ws.send(blob);
+      this.ws.send(toBlob(debug));
     }
 
     this.ws.onmessage = (message) => {
-      console.log(message.data.text().then(data => {
+      toJson(message).then(data => {
         console.log(data);
-      }));
+      });
 
-      const dataFromServer = JSON.parse(message.data);
-      console.log(dataFromServer);
-      const stateToChange = {};
-      if (dataFromServer.type === "userevent") {
-        stateToChange.currentUsers = Object.values(dataFromServer.data.users);
-      } else if (dataFromServer.type === "contentchange") {
-        // stateToChange.text = dataFromServer.data.editorContent || contentDefaultMessage;
-      }
+      // const dataFromServer = JSON.parse(message.data);
+      // console.log(dataFromServer);
+      // const stateToChange = {};
+      // if (dataFromServer.type === "userevent") {
+      // stateToChange.currentUsers = Object.values(dataFromServer.data.users);
+      // } else if (dataFromServer.type === "contentchange") {
+      // stateToChange.text = dataFromServer.data.editorContent || contentDefaultMessage;
+      // }
       // stateToChange.userActivity = dataFromServer.data.userActivity;
       // this.setState({
       //   ...stateToChange
