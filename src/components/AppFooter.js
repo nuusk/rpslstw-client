@@ -44,7 +44,7 @@ const AppFooter = ({ ...rest }) => (
       <span>&copy; 2019 PUT</span>
     </LinkWrapper>
     <LinkWrapper right>
-      <CustomSocialIcon url="https://www.github.com/pietersweter/gams-client" />
+      <CustomSocialIcon url="https://www.github.com/pietersweter/rpslstw-client" />
     </LinkWrapper>
   </Wrapper>
 );
