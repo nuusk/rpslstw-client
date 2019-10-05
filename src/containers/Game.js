@@ -88,11 +88,10 @@ export default class Game extends Component {
 
   }
 
-  joinRoom() {
+  joinRoom(roomId = 1) {
     // this.ws.send(getRooms());
-    this.ws.send(newRoom());
     console.log(getCookie(TOKEN_COOKIE));
-    this.ws.send(joinRoom(1, getCookie(TOKEN_COOKIE)))
+    this.ws.send(joinRoom(roomId, getCookie(TOKEN_COOKIE)));
   }
 
   render() {
@@ -107,8 +106,9 @@ export default class Game extends Component {
               rooms.length
                 ? <Gallery>
                   {rooms.map(room => (
-                    <Tile key={room.id} title={room.id}>
-                      room
+                    <Tile key={room.id} title={room.id} onClick={() => { this.joinRoom(room.id) }}>
+                      <div>players:</div>
+                      <strong>{room.users.length}/{room.maxUsers}</strong>
                     </Tile>
                   ))}
                 </Gallery>

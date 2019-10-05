@@ -3,11 +3,21 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const InnerTile = styled.div`
-  background: ${imageURL => `url(${imageURL.imageURL}) no-repeat center`};
+  background-color: ${({ theme }) => theme.color.palette.isabelline};
   background-size: cover;
   height: 100px;
   width: 120px;
   border: 2px solid ${({ theme }) => theme.color.palette.vistaBlue};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.color.palette.vistaBlue};
+
+  strong {
+    font-size: ${({ theme }) => theme.font.size.heading.secondary};
+    color: ${({ theme }) => theme.color.palette.moonstoneBlue};
+  }
 `;
 
 const TopLabel = styled.div`
