@@ -3,6 +3,8 @@ import Layout from '../components/Layout';
 import AppHeader from '../components/AppHeader';
 import AppFooter from '../components/AppFooter';
 import Wall from '../components/Wall';
+import Gallery from '../components/Gallery';
+import Tile from '../components/Tile';
 import { toJson } from '../helpers/communication';
 import { getToken, newRoom, getRooms, joinRoom, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM } from '../helpers/events';
 import { setCookie, getCookie, removeCookie, TOKEN_COOKIE } from '../helpers/cookies';
@@ -18,6 +20,11 @@ export default class Game extends Component {
     this.wsNewRoom = this.wsNewRoom.bind(this);
     this.wsJoinRoom = this.wsJoinRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
+
+    this.state = {
+      rooms: [],
+      isLoading: true,
+    };
   }
 
   wsGetToken(data) {
@@ -29,6 +36,10 @@ export default class Game extends Component {
   wsGetRooms(data) {
     console.log('[wsGetRooms]: ');
     console.log(data);
+
+    this.setState({
+      rooms: data.rooms,
+    });
   }
 
   wsNewRoom(data) {
@@ -40,7 +51,6 @@ export default class Game extends Component {
     console.log('[wsJoinRoom]: ');
     console.log(data);
   }
-
 
   handleMessage(message) {
     toJson(message)
@@ -64,23 +74,14 @@ export default class Game extends Component {
     this.ws.onopen = () => {
       // this.ws.send(newRoom());
       this.ws.send(getToken());
+      this.ws.send(getRooms());
+
+      this.setState({
+        isLoading: false,
+      });
     }
 
     this.ws.onmessage = this.handleMessage;
-
-
-    // const dataFromServer = JSON.parse(message.data);
-    // console.log(dataFromServer);
-    // const stateToChange = {};
-    // if (dataFromServer.type === "userevent") {
-    // stateToChange.currentUsers = Object.values(dataFromServer.data.users);
-    // } else if (dataFromServer.type === "contentchange") {
-    // stateToChange.text = dataFromServer.data.editorContent || contentDefaultMessage;
-    // }
-    // stateToChange.userActivity = dataFromServer.data.userActivity;
-    // this.setState({
-    //   ...stateToChange
-    // });
   }
 
   startGame() {
@@ -95,17 +96,31 @@ export default class Game extends Component {
   }
 
   render() {
+    const { rooms } = this.state;
+
     return (
       <Layout columned narrow>
         <AppHeader />
         <main>
           <Wall>
-            <h1>
-              {'Wanna play?'}
-            </h1>
-            <h3 onClick={this.startGame}>
-              <div onClick={this.joinRoom}>START</div>
-            </h3>
+            {
+              rooms.length
+                ? <Gallery>
+                  {rooms.map(room => (
+                    <Tile key={room.id} title={room.id}>
+                      room
+                    </Tile>
+                  ))}
+                </Gallery>
+                : <>
+                  <h1>
+                    {'There are no active rooms...'}
+                  </h1>
+                  <h3>
+                    <div onClick={this.joinRoom}>NEW ROOM</div>
+                  </h3>
+                </>
+            }
           </Wall>
         </main>
         <AppFooter />
