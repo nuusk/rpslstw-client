@@ -24,7 +24,6 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.color.text.primary};
     font-family: ${({ theme }) => theme.font.family.base};
     font-weight: ${({ theme }) => theme.font.weight.base};
-    perspective: ${({ theme }) => theme.visuals.perspective.far};
   }
 
   header, main, footer {
