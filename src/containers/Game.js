@@ -20,6 +20,7 @@ export default class Game extends Component {
     this.wsNewRoom = this.wsNewRoom.bind(this);
     this.wsJoinRoom = this.wsJoinRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
+    this.renderRooms = this.renderRooms.bind(this);
 
     this.state = {
       rooms: [],
@@ -37,8 +38,13 @@ export default class Game extends Component {
     console.log('[wsGetRooms]: ');
     console.log(data);
 
+    let rooms = [];
+    data.rooms.forEach(room => {
+      rooms[room.id] = room;
+    });
+
     this.setState({
-      rooms: data.rooms,
+      rooms: rooms,
     });
   }
 
@@ -88,6 +94,17 @@ export default class Game extends Component {
 
   }
 
+  renderRooms() {
+    const { rooms } = this.state;
+
+    return rooms.map(room => (
+      <Tile key={room.id} title={room.id} onClick={() => { this.joinRoom(room.id) }}>
+        <div>players:</div>
+        <strong>{room.users.length}/{room.maxUsers}</strong>
+      </Tile>
+    ));
+  }
+
   joinRoom(roomId = 1) {
     // this.ws.send(getRooms());
     console.log(getCookie(TOKEN_COOKIE));
@@ -95,22 +112,17 @@ export default class Game extends Component {
   }
 
   render() {
-    const { rooms } = this.state;
+    const { rooms, isLoading } = this.state;
 
     return (
       <Layout columned narrow>
         <AppHeader />
         <main>
-          <Wall>
+          <Wall isLoading={isLoading}>
             {
               rooms.length
                 ? <Gallery>
-                  {rooms.map(room => (
-                    <Tile key={room.id} title={room.id} onClick={() => { this.joinRoom(room.id) }}>
-                      <div>players:</div>
-                      <strong>{room.users.length}/{room.maxUsers}</strong>
-                    </Tile>
-                  ))}
+                  {this.renderRooms()}
                 </Gallery>
                 : <>
                   <h1>

@@ -12,7 +12,7 @@ const theme = {
       error: '#AA1B2E',
     },
     text: '#2D2C2D',
-    background: '#C0B9DD',
+    background: '#F7F4EA',
     palette: { // for reference
       platinum: '#E9EAE8',
       isabelline: '#F7F4EA',

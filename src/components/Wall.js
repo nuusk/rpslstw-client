@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import Loader from './Loader';
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,9 +28,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const Wall = ({ children, ...rest }) => (
+const Wall = ({ children, isLoading, ...rest }) => (
   <Wrapper {...rest}>
-    {children}
+    {isLoading ? <Loader /> : children}
   </Wrapper>
 );
 
@@ -38,10 +39,12 @@ Wall.propTypes = {
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node),
   ]),
+  isLoading: PropTypes.bool,
 };
 
 Wall.defaultProps = {
   children: [],
+  isLoading: false,
 };
 
 export default Wall;
