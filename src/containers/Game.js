@@ -15,12 +15,18 @@ export default class Game extends Component {
 
     this.startGame = this.startGame.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
-    this.wsGetToken = this.wsGetToken.bind(this);
-    this.wsGetRooms = this.wsGetRooms.bind(this);
-    this.wsNewRoom = this.wsNewRoom.bind(this);
-    this.wsJoinRoom = this.wsJoinRoom.bind(this);
-    this.joinRoom = this.joinRoom.bind(this);
+
+    this.resGetToken = this.resGetToken.bind(this);
+    this.resGetRooms = this.resGetRooms.bind(this);
+    this.resNewRoom = this.resNewRoom.bind(this);
+    this.resJoinRoom = this.resJoinRoom.bind(this);
+
     this.renderRooms = this.renderRooms.bind(this);
+
+    this.reqGetToken = this.reqGetToken.bind(this);
+    this.reqJoinRoom = this.reqJoinRoom.bind(this);
+    this.reqNewRoom = this.reqNewRoom.bind(this);
+    this.reqGetRooms = this.reqGetRooms.bind(this);
 
     this.state = {
       rooms: [],
@@ -28,16 +34,11 @@ export default class Game extends Component {
     };
   }
 
-  wsGetToken(data) {
-    console.log('[wsGetToken]: ');
-    console.log(data);
+  resGetToken(data) {
     setCookie(TOKEN_COOKIE, data.uid);
   }
 
-  wsGetRooms(data) {
-    console.log('[wsGetRooms]: ');
-    console.log(data);
-
+  resGetRooms(data) {
     let rooms = [];
     data.rooms.forEach(room => {
       rooms[room.id] = room;
@@ -48,13 +49,13 @@ export default class Game extends Component {
     });
   }
 
-  wsNewRoom(data) {
-    console.log('[wsNewRoom]: ');
+  resNewRoom(data) {
+    console.log('[resNewRoom]: ');
     console.log(data);
   }
 
-  wsJoinRoom(data) {
-    console.log('[wsJoinRoom]: ');
+  resJoinRoom(data) {
+    console.log('[resJoinRoom]: ');
     console.log(data);
   }
 
@@ -62,13 +63,11 @@ export default class Game extends Component {
     toJson(message)
       .then(data => JSON.parse(data))
       .then(data => {
-        console.log(data);
-        console.log(data["type"]);
         switch (data.type) {
-          case GET_TOKEN: this.wsGetToken(data); break;
-          case GET_ROOMS: this.wsGetRooms(data); break;
-          case NEW_ROOM: this.wsNewRoom(data); break;
-          case JOIN_ROOM: this.wsJoinRoom(data); break;
+          case GET_TOKEN: this.resGetToken(data); break;
+          case GET_ROOMS: this.resGetRooms(data); break;
+          case NEW_ROOM: this.resNewRoom(data); break;
+          case JOIN_ROOM: this.resJoinRoom(data); break;
           default: break;
         }
       });
@@ -78,7 +77,6 @@ export default class Game extends Component {
     this.ws = new WebSocket('wss://rpslstw-server.herokuapp.com', 'rpslstw-protocol');
 
     this.ws.onopen = () => {
-      // this.ws.send(newRoom());
       this.ws.send(getToken());
       this.ws.send(getRooms());
 
@@ -98,17 +96,29 @@ export default class Game extends Component {
     const { rooms } = this.state;
 
     return rooms.map(room => (
-      <Tile key={room.id} title={room.id} onClick={() => { this.joinRoom(room.id) }}>
+      <Tile key={room.id} title={room.id} onClick={() => { this.reqJoinRoom(room.id) }}>
         <div>players:</div>
         <strong>{room.users.length}/{room.maxUsers}</strong>
       </Tile>
     ));
   }
 
-  joinRoom(roomId = 1) {
-    // this.ws.send(getRooms());
-    console.log(getCookie(TOKEN_COOKIE));
+  reqNewRoom() {
+    this.ws.send(newRoom());
+    this.reqGetRooms();
+  }
+
+  reqJoinRoom(roomId = 1) {
     this.ws.send(joinRoom(roomId, getCookie(TOKEN_COOKIE)));
+    this.reqGetRooms();
+  }
+
+  reqGetRooms() {
+    this.ws.send(getRooms());
+  }
+
+  reqGetToken() {
+    this.ws.send(getToken());
   }
 
   render() {
@@ -128,11 +138,11 @@ export default class Game extends Component {
                   <h1>
                     {'There are no active rooms...'}
                   </h1>
-                  <h3>
-                    <div onClick={this.joinRoom}>NEW ROOM</div>
-                  </h3>
                 </>
             }
+            <h3>
+              <div onClick={this.reqNewRoom}>NEW ROOM</div>
+            </h3>
           </Wall>
         </main>
         <AppFooter />
