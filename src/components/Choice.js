@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { getImage } from '../helpers/images';
 
@@ -41,6 +41,11 @@ const InnerTile = styled.div`
       opacity: 0.5;
     }
   }
+
+  ${({ backside }) => backside
+    && css`
+    opacity: 0;
+  `}
 `;
 
 export default class Choice extends Component {
@@ -63,10 +68,10 @@ export default class Choice extends Component {
 
   render() {
     const { imageURL } = this.state;
-    const { choice, onClick } = this.props;
+    const { choice, onClick, backside } = this.props;
 
     return (
-      <InnerTile imageURL={imageURL} onClick={onClick}>
+      <InnerTile imageURL={imageURL} onClick={onClick} backside={backside} >
         <Overlay>{choice}</Overlay>
       </InnerTile>
     );
@@ -75,7 +80,11 @@ export default class Choice extends Component {
 
 Choice.propTypes = {
   choice: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  backside: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
-// export default Choice;
+Choice.defaultProps = {
+  backside: false,
+  onClick: () => false,
+};
