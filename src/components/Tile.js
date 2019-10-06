@@ -52,11 +52,11 @@ const Tile = ({
   );
 
 Tile.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.number.isRequired
 };
 
 Tile.defaultProps = {
-  title: '',
+  title: null,
 };
 
 export default Tile;

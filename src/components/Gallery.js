@@ -7,6 +7,10 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   padding: 0 80px;
+
+  button {
+    justify-self: flex-end;
+  }
 `;
 
 const Gallery = ({ children, ...rest }) => (

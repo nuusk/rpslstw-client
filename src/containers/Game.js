@@ -5,10 +5,11 @@ import AppFooter from '../components/AppFooter';
 import Wall from '../components/Wall';
 import Gallery from '../components/Gallery';
 import Tile from '../components/Tile';
+import Button from '../components/Button';
 import { toJson } from '../helpers/communication';
-import { getToken, newRoom, getRooms, joinRoom, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM } from '../helpers/events';
+import { getToken, newRoom, getRooms, joinRoom, clearRooms, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS } from '../helpers/events';
 import { setCookie, getCookie, removeCookie, TOKEN_COOKIE } from '../helpers/cookies';
-import { fancyWait, seconds } from '../helpers/time';
+import { fancyWait } from '../helpers/time';
 
 export default class Game extends Component {
   constructor() {
@@ -28,6 +29,7 @@ export default class Game extends Component {
     this.reqJoinRoom = this.reqJoinRoom.bind(this);
     this.reqNewRoom = this.reqNewRoom.bind(this);
     this.reqGetRooms = this.reqGetRooms.bind(this);
+    this.reqClearRooms = this.reqClearRooms.bind(this);
 
     this.state = {
       rooms: [],
@@ -64,6 +66,7 @@ export default class Game extends Component {
     toJson(message)
       .then(data => JSON.parse(data))
       .then(data => {
+        console.log(data);
         switch (data.type) {
           case GET_TOKEN: this.resGetToken(data); break;
           case GET_ROOMS: this.resGetRooms(data); break;
@@ -108,6 +111,7 @@ export default class Game extends Component {
   }
 
   reqNewRoom() {
+    console.log('asd');
     this.ws.send(newRoom());
     this.reqGetRooms();
   }
@@ -123,6 +127,10 @@ export default class Game extends Component {
 
   reqGetToken() {
     this.ws.send(getToken());
+  }
+
+  reqClearRooms() {
+    this.ws.send(clearRooms());
   }
 
   render() {
@@ -145,7 +153,8 @@ export default class Game extends Component {
                 </>
             }
             <h3>
-              <div onClick={this.reqNewRoom}>NEW ROOM</div>
+              <Button onClick={this.reqNewRoom}>NEW ROOM</Button>
+              <Button onClick={this.clearRooms}>CLEAR ROOMS</Button>
             </h3>
           </Wall>
         </main>

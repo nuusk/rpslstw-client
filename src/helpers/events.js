@@ -4,6 +4,7 @@ export const GET_TOKEN = 'getToken';
 export const NEW_ROOM = 'newRoom';
 export const GET_ROOMS = 'getRooms';
 export const JOIN_ROOM = 'joinRoom';
+export const CLEAR_ROOMS = 'clearRooms';
 
 export const getToken = () => (
   toBlob({
@@ -29,5 +30,11 @@ export const joinRoom = (roomId, token) => (
     type: JOIN_ROOM,
     roomId,
     token,
+  })
+);
+
+export const clearRooms = () => (
+  toBlob({
+    type: CLEAR_ROOMS,
   })
 );

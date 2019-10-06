@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Loader from './Loader';
 
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
