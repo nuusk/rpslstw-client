@@ -85,7 +85,7 @@ export default class Game extends Component {
         this.setState({
           isLoading: false,
         });
-      }, seconds(.5));
+      });
 
     }
 
