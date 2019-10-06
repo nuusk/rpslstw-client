@@ -11,13 +11,14 @@ import {
   getToken, newRoom, getRooms,
   joinRoom, clearRooms, ready,
   choice, GET_TOKEN, GET_ROOMS,
-  NEW_ROOM, JOIN_ROOM, GAME_STARTED,
+  NEW_ROOM, JOIN_ROOM, GAME_STARTED, CHOICE,
 } from '../helpers/events';
 import {
   setCookie, getCookie, TOKEN_COOKIE,
 } from '../helpers/cookies';
 import { fancyWait } from '../helpers/time';
 import ChoicesTable from '../components/ChoicesTable';
+import ScoreTable from '../components/ScoreTable';
 
 export default class Game extends Component {
   constructor() {
@@ -28,6 +29,7 @@ export default class Game extends Component {
     this.resGetToken = this.resGetToken.bind(this);
     this.resGetRooms = this.resGetRooms.bind(this);
     this.resGameStarted = this.resGameStarted.bind(this);
+    this.resChoice = this.resChoice.bind(this);
 
     this.reqGetToken = this.reqGetToken.bind(this);
     this.reqJoinRoom = this.reqJoinRoom.bind(this);
@@ -94,16 +96,20 @@ export default class Game extends Component {
     });
   }
 
+  resChoice(data) {
+
+  }
+
   handleMessage(message) {
     toJson(message)
       .then((data) => JSON.parse(data))
       .then((data) => {
+        console.log(data);
         switch (data.type) {
           case GET_TOKEN: this.resGetToken(data); break;
           case GET_ROOMS: this.resGetRooms(data); break;
-          case NEW_ROOM: this.resNewRoom(data); break;
-          case JOIN_ROOM: this.resJoinRoom(data); break;
           case GAME_STARTED: this.resGameStarted(data); break;
+          case CHOICE: this.resChoice(data); break;
           default: break;
         }
       });
@@ -186,7 +192,10 @@ export default class Game extends Component {
 
   renderGame() {
     return (
-      <ChoicesTable pickChoice={this.reqChoice} />
+      <>
+        <ScoreTable />
+        <ChoicesTable pickChoice={this.reqChoice} />
+      </>
     );
   }
 
