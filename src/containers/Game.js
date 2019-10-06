@@ -10,6 +10,7 @@ import { toJson } from '../helpers/communication';
 import { getToken, newRoom, getRooms, joinRoom, clearRooms, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS } from '../helpers/events';
 import { setCookie, getCookie, removeCookie, TOKEN_COOKIE } from '../helpers/cookies';
 import { fancyWait } from '../helpers/time';
+import Choice from '../components/Choice';
 
 export default class Game extends Component {
   constructor() {
@@ -142,6 +143,7 @@ export default class Game extends Component {
         <AppHeader />
         <main>
           <Wall isLoading={isLoading}>
+            <Choice choice="spock" />
             {
               rooms.length
                 ? <Gallery>
