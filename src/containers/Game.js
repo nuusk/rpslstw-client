@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Layout from '../components/Layout';
-import AppHeader from '../components/AppHeader';
-import AppFooter from '../components/AppFooter';
+
 import Wall from '../components/Wall';
 import Gallery from '../components/Gallery';
 import Tile from '../components/Tile';
@@ -46,6 +45,8 @@ export default class Game extends Component {
       rooms: [],
       isLoading: true,
       myRoomID: null,
+      yourPoints: 0,
+      enemyPoints: 0,
     };
   }
 
@@ -97,7 +98,8 @@ export default class Game extends Component {
   }
 
   resChoice(data) {
-
+    console.log('~~~~~~~~~~~~');
+    console.log(data);
   }
 
   handleMessage(message) {
@@ -204,13 +206,11 @@ export default class Game extends Component {
 
     return (
       <Layout columned narrow>
-        <AppHeader />
         <main>
           <Wall isLoading={isLoading}>
             {myRoomID ? this.renderGame() : this.renderRooms()}
           </Wall>
         </main>
-        <AppFooter />
       </Layout>
     );
   }

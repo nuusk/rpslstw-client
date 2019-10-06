@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import AppHeader from './AppHeader';
+import AppFooter from './AppFooter';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background};
@@ -25,16 +27,18 @@ const Content = styled.div`
     align-items: center;
   `}
 
-${({ narrow }) => narrow
+  ${({ narrow }) => narrow
     && css`
-    max-width: ${({ theme }) => theme.screen.narrow}
+    max-width: ${({ theme }) => theme.screen.narrow};
   `}
 `;
 
 const Layout = ({ children, ...rest }) => (
   <Wrapper {...rest}>
     <Content {...rest}>
+      <AppHeader />
       {children}
+      <AppFooter />
     </Content>
   </Wrapper>
 );
