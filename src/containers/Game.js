@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Layout from '../components/Layout';
-
 import Wall from '../components/Wall';
 import Gallery from '../components/Gallery';
 import Tile from '../components/Tile';
@@ -206,11 +205,9 @@ export default class Game extends Component {
 
     return (
       <Layout columned narrow>
-        <main>
-          <Wall isLoading={isLoading}>
-            {myRoomID ? this.renderGame() : this.renderRooms()}
-          </Wall>
-        </main>
+        <Wall isLoading={isLoading}>
+          {myRoomID ? this.renderGame() : this.renderRooms()}
+        </Wall>
       </Layout>
     );
   }
