@@ -74,6 +74,11 @@ export default class Game extends Component {
   resGetRooms(data) {
     const rooms = [];
     data.rooms.forEach((room) => {
+      if (room.users.includes(getCookie(TOKEN_COOKIE))) {
+        this.setState({
+          myRoomID: room.id,
+        });
+      }
       rooms[room.id] = room;
     });
 
@@ -83,8 +88,9 @@ export default class Game extends Component {
   }
 
   resGameStarted(data) {
-    console.log('[resGameStarted]');
-    console.log(data);
+    this.setState({
+      myRoomID: data.id,
+    });
   }
 
   resNewRoom(data) {
@@ -201,8 +207,8 @@ export default class Game extends Component {
       <Layout columned narrow>
         <AppHeader />
         <main>
-          <Wall isLoading={false}>
-            {true ? this.renderGame() : this.renderRooms()}
+          <Wall isLoading={isLoading}>
+            {myRoomID ? this.renderGame() : this.renderRooms()}
           </Wall>
         </main>
         <AppFooter />
