@@ -75,7 +75,7 @@ export default class Game extends Component {
   }
 
   componentDidMount() {
-    this.ws = new WebSocket('ws://rpslstw-server.herokuapp.com', 'rpslstw-protocol');
+    this.ws = new WebSocket('wss://rpslstw-server.herokuapp.com', 'rpslstw-protocol');
 
     this.ws.onopen = () => {
       // this.ws.send(newRoom());
