@@ -20,9 +20,10 @@ export const newRoom = (maxUsers = 2) => (
   })
 );
 
-export const getRooms = () => (
+export const getRooms = (token = '') => (
   toBlob({
     type: GET_ROOMS,
+    token,
   })
 );
 

@@ -39,7 +39,6 @@ export default class Game extends Component {
       rooms: [],
       isLoading: true,
       myRoomID: null,
-      myToken: '',
     };
   }
 
@@ -51,7 +50,7 @@ export default class Game extends Component {
       if (!myToken) {
         this.ws.send(getToken());
       }
-      this.ws.send(getRooms());
+      this.ws.send(getRooms(myToken));
 
       fancyWait(() => {
         this.setState({
@@ -115,7 +114,7 @@ export default class Game extends Component {
   }
 
   reqGetRooms() {
-    this.ws.send(getRooms());
+    this.ws.send(getRooms(getCookie(TOKEN_COOKIE)));
   }
 
   reqGetToken() {
