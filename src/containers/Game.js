@@ -46,6 +46,7 @@ export default class Game extends Component {
       myRoomID: null,
       yourPoints: 0,
       enemyPoints: 0,
+      currentChoice: '',
     };
   }
 
@@ -99,6 +100,14 @@ export default class Game extends Component {
   resChoice(data) {
     console.log('~~~~~~~~~~~~');
     console.log(data);
+    const { enemyPoints, yourPoints } = this.state;
+
+    fancyWait(() => {
+      this.setState({
+        enemyPoints: enemyPoints + 1,
+        yourPoints,
+      });
+    })
   }
 
   handleMessage(message) {
@@ -146,6 +155,9 @@ export default class Game extends Component {
 
   reqChoice(myChoice) {
     this.ws.send(choice(myChoice, getCookie(TOKEN_COOKIE)));
+    this.setState({
+      currentChoice: myChoice,
+    });
   }
 
   renderRooms() {
@@ -192,10 +204,12 @@ export default class Game extends Component {
   }
 
   renderGame() {
+    const { currentChoice } = this.state;
+
     return (
       <>
         <ScoreTable />
-        <ChoicesTable pickChoice={this.reqChoice} />
+        <ChoicesTable pickChoice={this.reqChoice} currentChoice={currentChoice} />
       </>
     );
   }

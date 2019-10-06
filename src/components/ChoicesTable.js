@@ -13,20 +13,33 @@ const Wrapper = styled.div`
   }
 `;
 
-const ChoicesTable = ({ pickChoice, ...rest }) => (
+const ChoicesTable = ({ pickChoice, currentChoice, ...rest }) => (
   <Wrapper {...rest}>
-    <Choice choice="rock" onClick={() => pickChoice('ro')} />
-    <Choice choice="paper" onClick={() => pickChoice('pa')} />
-    <Choice choice="scizors" onClick={() => pickChoice('sc')} />
-    <Choice choice="lizard" onClick={() => pickChoice('li')} />
-    <Choice choice="spock" onClick={() => pickChoice('sp')} />
-    <Choice choice="thumb" onClick={() => pickChoice('th')} />
-    <Choice choice="well" onClick={() => pickChoice('we')} />
+    {
+      currentChoice
+        ? <Choice choice={currentChoice} />
+        : (
+          <>
+            <Choice choice="rock" onClick={() => pickChoice('ro')} />
+            <Choice choice="paper" onClick={() => pickChoice('pa')} />
+            <Choice choice="scizors" onClick={() => pickChoice('sc')} />
+            <Choice choice="lizard" onClick={() => pickChoice('li')} />
+            <Choice choice="spock" onClick={() => pickChoice('sp')} />
+            <Choice choice="thumb" onClick={() => pickChoice('th')} />
+            <Choice choice="well" onClick={() => pickChoice('we')} />
+          </>
+        )
+    }
   </Wrapper>
 );
 
 ChoicesTable.propTypes = {
   pickChoice: PropTypes.func.isRequired,
+  currentChoice: PropTypes.string,
+};
+
+ChoicesTable.defaultProps = {
+  currentChoice: '',
 };
 
 export default ChoicesTable;

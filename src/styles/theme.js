@@ -19,7 +19,7 @@ const theme = {
       lavenderGray: '#C0B9DD',
       vistaBlue: '#80A1D4',
       moonstoneBlue: '#75C9C8',
-      charlestonGreen: '#2D2C2D'
+      charlestonGreen: '#2D2C2D',
     },
   },
   font: {
