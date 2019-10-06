@@ -14,7 +14,7 @@ const InnerRect = styled.div`
   height: 60px;
   width: 60px;
   border: 10px solid ${({ theme }) => theme.color.palette.moonstoneBlue};
-  animation: spin 1.5s infinite;
+  animation: spin 1.5s infinite cubic-bezier(.18,.58,.79,.56);
   left: -50%;
 
   @keyframes spin {
@@ -35,7 +35,7 @@ const InnerCircle = styled.div`
   width: 20px;
   border-radius: 20%;
   border: 10px solid ${({ theme }) => theme.color.palette.lavenderGray};
-  animation: spin-reverse 3s infinite;
+  animation: spin-reverse 3s infinite cubic-bezier(.18,.58,.79,.56);
   top: 50%;
 
   @keyframes spin-reverse {

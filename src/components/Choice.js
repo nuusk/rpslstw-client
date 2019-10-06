@@ -1,32 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {
-  getLizardImage, getPaperImage, getRockImage, getScizorsImage, getSpockImage, getThumbImage, getWellImage,
-} from '../helpers/images';
+import { getImage } from '../helpers/images';
 
 const InnerTile = styled.div`
-  background-color: ${({ theme }) => theme.color.palette.isabelline};
   background-size: cover;
-  height: 100px;
-  width: 120px;
-  border: 2px solid ${({ theme }) => theme.color.palette.vistaBlue};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.color.palette.vistaBlue};
-
-  strong {
-    font-size: ${({ theme }) => theme.font.size.heading.secondary};
-    color: ${({ theme }) => theme.color.palette.moonstoneBlue};
-  }
-`;
-
-const Wrapper = styled.div`
-  margin: 10px;
+  height: 200px;
+  width: 300px;
+  border: 4px solid ${({ theme }) => theme.color.palette.charlestonGreen};
   cursor: pointer;
-  display: inline-block;
+  background: ${({ imageURL }) => `url(${imageURL}) no-repeat center`};
+  background-size: cover;
+  border-radius: 16px;
   transition: ${({ theme }) => theme.transition.quick};
 
   &:hover {
@@ -35,14 +20,34 @@ const Wrapper = styled.div`
   }
 `;
 
-const Choice = ({ imageURL, ...rest }) => (
-  <Wrapper>
-    <InnerTile imageURL={imageURL} {...rest} />
-  </Wrapper>
-);
+export default class Choice extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      imageURL: '',
+    };
+  }
+
+  componentDidMount() {
+    const { choice } = this.props;
+
+    this.setState({
+      imageURL: getImage(choice),
+    });
+  }
+
+
+  render() {
+    const { imageURL } = this.state;
+    return (
+      <InnerTile imageURL={imageURL} />
+    );
+  }
+}
 
 Choice.propTypes = {
   choice: PropTypes.string.isRequired,
 };
 
-export default Choice;
+// export default Choice;

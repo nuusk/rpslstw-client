@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { seconds } from '../helpers/time';
 
@@ -6,10 +6,10 @@ const colors = [
   '#C0B9DD',
   '#80A1D4',
   '#75C9C8',
-  '#2D2C2D'
+  '#2D2C2D',
 ];
 
-const TICK_SPEED = seconds(.12);
+const TICK_SPEED = seconds(0.12);
 
 const getRandomColor = () => colors[Math.floor(colors.length * Math.random(1))];
 
@@ -49,10 +49,10 @@ export default class Letter extends Component {
     const { color } = this.state;
 
     return (
-      <span style={{ color: color }}>
+      <span style={{ color }}>
         {children}
       </span>
-    )
+    );
   }
 }
 
@@ -66,4 +66,3 @@ Letter.propTypes = {
 Letter.defaultProps = {
   children: [],
 };
-

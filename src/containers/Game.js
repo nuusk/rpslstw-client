@@ -7,16 +7,18 @@ import Gallery from '../components/Gallery';
 import Tile from '../components/Tile';
 import Button from '../components/Button';
 import { toJson } from '../helpers/communication';
-import { getToken, newRoom, getRooms, joinRoom, clearRooms, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS } from '../helpers/events';
-import { setCookie, getCookie, removeCookie, TOKEN_COOKIE } from '../helpers/cookies';
+import {
+  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY,
+} from '../helpers/events';
+import {
+  setCookie, getCookie, TOKEN_COOKIE,
+} from '../helpers/cookies';
 import { fancyWait } from '../helpers/time';
-import Choice from '../components/Choice';
 
 export default class Game extends Component {
   constructor() {
     super();
 
-    this.startGame = this.startGame.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
 
     this.resGetToken = this.resGetToken.bind(this);
@@ -31,11 +33,34 @@ export default class Game extends Component {
     this.reqNewRoom = this.reqNewRoom.bind(this);
     this.reqGetRooms = this.reqGetRooms.bind(this);
     this.reqClearRooms = this.reqClearRooms.bind(this);
+    this.reqReady = this.reqReady.bind(this);
 
     this.state = {
       rooms: [],
       isLoading: true,
+      myRoomID: null,
+      myToken: '',
     };
+  }
+
+  componentDidMount() {
+    this.ws = new WebSocket('wss://rpslstw-server.herokuapp.com', 'rpslstw-protocol');
+
+    this.ws.onopen = () => {
+      const myToken = getCookie(TOKEN_COOKIE);
+      if (!myToken) {
+        this.ws.send(getToken());
+      }
+      this.ws.send(getRooms());
+
+      fancyWait(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
+    };
+
+    this.ws.onmessage = this.handleMessage;
   }
 
   resGetToken(data) {
@@ -43,13 +68,13 @@ export default class Game extends Component {
   }
 
   resGetRooms(data) {
-    let rooms = [];
-    data.rooms.forEach(room => {
+    const rooms = [];
+    data.rooms.forEach((room) => {
       rooms[room.id] = room;
     });
 
     this.setState({
-      rooms: rooms,
+      rooms,
     });
   }
 
@@ -65,8 +90,8 @@ export default class Game extends Component {
 
   handleMessage(message) {
     toJson(message)
-      .then(data => JSON.parse(data))
-      .then(data => {
+      .then((data) => JSON.parse(data))
+      .then((data) => {
         console.log(data);
         switch (data.type) {
           case GET_TOKEN: this.resGetToken(data); break;
@@ -76,39 +101,6 @@ export default class Game extends Component {
           default: break;
         }
       });
-  }
-
-  componentDidMount() {
-    this.ws = new WebSocket('wss://rpslstw-server.herokuapp.com', 'rpslstw-protocol');
-
-    this.ws.onopen = () => {
-      this.ws.send(getToken());
-      this.ws.send(getRooms());
-
-      fancyWait(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
-
-    }
-
-    this.ws.onmessage = this.handleMessage;
-  }
-
-  startGame() {
-
-  }
-
-  renderRooms() {
-    const { rooms } = this.state;
-
-    return rooms.map(room => (
-      <Tile key={room.id} title={room.id} onClick={() => { this.reqJoinRoom(room.id) }}>
-        <div>players:</div>
-        <strong>{room.users.length}/{room.maxUsers}</strong>
-      </Tile>
-    ));
   }
 
   reqNewRoom() {
@@ -135,34 +127,67 @@ export default class Game extends Component {
     this.reqGetRooms();
   }
 
+  reqReady() {
+    this.ws.send(ready(getCookie(TOKEN_COOKIE)));
+    this.reqGetRooms();
+  }
+
+  renderRooms() {
+    const { rooms } = this.state;
+
+    return (
+      <>
+        {rooms.length
+          ? (
+            <Gallery>
+              {
+                rooms.map((room) => (
+                  <Tile
+                    key={room.id}
+                    title={room.id}
+                    onClick={() => { this.reqJoinRoom(room.id); }}
+                  >
+                    <div>players:</div>
+                    <strong>
+                      {room.users.length}
+                      /
+                      {room.maxUsers}
+                    </strong>
+                  </Tile>
+                ))
+              }
+            </Gallery>
+          )
+          : (
+            <>
+              <h1>
+                {'There are no active rooms...'}
+              </h1>
+            </>
+          )}
+
+        <h3>
+          <Button onClick={this.reqNewRoom}>NEW ROOM</Button>
+          <Button onClick={this.reqClearRooms}>CLEAR ROOMS</Button>
+          <Button onClick={this.reqReady}>READY</Button>
+        </h3>
+      </>
+    );
+  }
+
   render() {
-    const { rooms, isLoading } = this.state;
+    const { rooms, isLoading, myRoomID } = this.state;
 
     return (
       <Layout columned narrow>
         <AppHeader />
         <main>
           <Wall isLoading={isLoading}>
-            <Choice choice="spock" />
-            {
-              rooms.length
-                ? <Gallery>
-                  {this.renderRooms()}
-                </Gallery>
-                : <>
-                  <h1>
-                    {'There are no active rooms...'}
-                  </h1>
-                </>
-            }
-            <h3>
-              <Button onClick={this.reqNewRoom}>NEW ROOM</Button>
-              <Button onClick={this.reqClearRooms}>CLEAR ROOMS</Button>
-            </h3>
+            {myRoomID ? this.renderGame() : this.renderRooms()}
           </Wall>
         </main>
         <AppFooter />
       </Layout>
-    )
+    );
   }
 }

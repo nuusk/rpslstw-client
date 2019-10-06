@@ -45,14 +45,14 @@ const Wrapper = styled.div`
 const Tile = ({
   gameID, title, imageURL, gameURL, ...rest
 }) => (
-    <Wrapper>
+  <Wrapper>
       <TopLabel>{title}</TopLabel>
       <InnerTile imageURL={imageURL} {...rest} />
     </Wrapper>
-  );
+);
 
 Tile.propTypes = {
-  title: PropTypes.number.isRequired
+  title: PropTypes.number.isRequired,
 };
 
 Tile.defaultProps = {
