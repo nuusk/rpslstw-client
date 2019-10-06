@@ -131,6 +131,7 @@ export default class Game extends Component {
 
   reqClearRooms() {
     this.ws.send(clearRooms());
+    this.reqGetRooms();
   }
 
   render() {
@@ -154,7 +155,7 @@ export default class Game extends Component {
             }
             <h3>
               <Button onClick={this.reqNewRoom}>NEW ROOM</Button>
-              <Button onClick={this.clearRooms}>CLEAR ROOMS</Button>
+              <Button onClick={this.reqClearRooms}>CLEAR ROOMS</Button>
             </h3>
           </Wall>
         </main>
