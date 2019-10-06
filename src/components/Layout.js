@@ -37,7 +37,9 @@ const Layout = ({ children, ...rest }) => (
   <Wrapper {...rest}>
     <Content {...rest}>
       <AppHeader />
-      {children}
+      <main>
+        {children}
+      </main>
       <AppFooter />
     </Content>
   </Wrapper>
