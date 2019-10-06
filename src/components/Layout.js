@@ -4,7 +4,8 @@ import styled, { css } from 'styled-components';
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background};
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -12,6 +13,7 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
+  min-height: 100vh;
   height: 100%;
   width: 100%;
 

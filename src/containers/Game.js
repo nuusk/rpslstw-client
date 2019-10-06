@@ -8,7 +8,10 @@ import Tile from '../components/Tile';
 import Button from '../components/Button';
 import { toJson } from '../helpers/communication';
 import {
-  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, choice, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY, GAME_STARTED,
+  getToken, newRoom, getRooms,
+  joinRoom, clearRooms, ready,
+  choice, GET_TOKEN, GET_ROOMS,
+  NEW_ROOM, JOIN_ROOM, GAME_STARTED,
 } from '../helpers/events';
 import {
   setCookie, getCookie, TOKEN_COOKIE,
@@ -24,8 +27,6 @@ export default class Game extends Component {
 
     this.resGetToken = this.resGetToken.bind(this);
     this.resGetRooms = this.resGetRooms.bind(this);
-    this.resNewRoom = this.resNewRoom.bind(this);
-    this.resJoinRoom = this.resJoinRoom.bind(this);
     this.resGameStarted = this.resGameStarted.bind(this);
 
     this.reqGetToken = this.reqGetToken.bind(this);
@@ -93,21 +94,10 @@ export default class Game extends Component {
     });
   }
 
-  resNewRoom(data) {
-    // console.log('[resNewRoom]: ');
-    // console.log(data);
-  }
-
-  resJoinRoom(data) {
-    // console.log('[resJoinRoom]: ');
-    // console.log(data);
-  }
-
   handleMessage(message) {
     toJson(message)
       .then((data) => JSON.parse(data))
       .then((data) => {
-        console.log(data);
         switch (data.type) {
           case GET_TOKEN: this.resGetToken(data); break;
           case GET_ROOMS: this.resGetRooms(data); break;

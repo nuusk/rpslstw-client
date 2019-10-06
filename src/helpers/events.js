@@ -15,9 +15,10 @@ export const getToken = () => (
   })
 );
 
-export const newRoom = (maxUsers = 2) => (
+export const newRoom = (maxPoints = 3, maxUsers = 2) => (
   toBlob({
     type: NEW_ROOM,
+    maxPoints,
     maxUsers,
   })
 );
