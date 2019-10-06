@@ -8,6 +8,7 @@ import Tile from '../components/Tile';
 import { toJson } from '../helpers/communication';
 import { getToken, newRoom, getRooms, joinRoom, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM } from '../helpers/events';
 import { setCookie, getCookie, removeCookie, TOKEN_COOKIE } from '../helpers/cookies';
+import { fancyWait, seconds } from '../helpers/time';
 
 export default class Game extends Component {
   constructor() {
@@ -80,9 +81,12 @@ export default class Game extends Component {
       this.ws.send(getToken());
       this.ws.send(getRooms());
 
-      this.setState({
-        isLoading: false,
-      });
+      fancyWait(() => {
+        this.setState({
+          isLoading: false,
+        });
+      }, seconds(.5));
+
     }
 
     this.ws.onmessage = this.handleMessage;
