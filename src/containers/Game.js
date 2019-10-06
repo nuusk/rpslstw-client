@@ -8,7 +8,7 @@ import Tile from '../components/Tile';
 import Button from '../components/Button';
 import { toJson } from '../helpers/communication';
 import {
-  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY, GAME_STARTED,
+  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, choice, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY, GAME_STARTED,
 } from '../helpers/events';
 import {
   setCookie, getCookie, TOKEN_COOKIE,
@@ -74,7 +74,7 @@ export default class Game extends Component {
   resGetRooms(data) {
     const rooms = [];
     data.rooms.forEach((room) => {
-      if (room.users.includes(getCookie(TOKEN_COOKIE))) {
+      if (room.users.includes(getCookie(TOKEN_COOKIE)) && room.status === 'Started') {
         this.setState({
           myRoomID: room.id,
         });
@@ -147,8 +147,8 @@ export default class Game extends Component {
     this.reqGetRooms();
   }
 
-  reqChoice(choice) {
-    this.ws.send(choice(choice, getCookie(TOKEN_COOKIE)));
+  reqChoice(myChoice) {
+    this.ws.send(choice(myChoice, getCookie(TOKEN_COOKIE)));
   }
 
   renderRooms() {

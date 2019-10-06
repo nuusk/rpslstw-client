@@ -63,10 +63,10 @@ export default class Choice extends Component {
 
   render() {
     const { imageURL } = this.state;
-    const { choice } = this.props;
+    const { choice, onClick } = this.props;
 
     return (
-      <InnerTile imageURL={imageURL}>
+      <InnerTile imageURL={imageURL} onClick={onClick}>
         <Overlay>{choice}</Overlay>
       </InnerTile>
     );
@@ -75,6 +75,7 @@ export default class Choice extends Component {
 
 Choice.propTypes = {
   choice: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 // export default Choice;

@@ -15,13 +15,13 @@ const Wrapper = styled.div`
 
 const ChoicesTable = ({ pickChoice, ...rest }) => (
   <Wrapper {...rest}>
-    <Choice choice="rock" onClick={() => pickChoice('rock')} />
-    <Choice choice="paper" onClick={() => pickChoice('paper')} />
-    <Choice choice="scizors" onClick={() => pickChoice('scizors')} />
-    <Choice choice="lizard" onClick={() => pickChoice('lizard')} />
-    <Choice choice="spock" onClick={() => pickChoice('spock')} />
-    <Choice choice="thumb" onClick={() => pickChoice('thumb')} />
-    <Choice choice="well" onClick={() => pickChoice('well')} />
+    <Choice choice="rock" onClick={() => pickChoice('ro')} />
+    <Choice choice="paper" onClick={() => pickChoice('pa')} />
+    <Choice choice="scizors" onClick={() => pickChoice('sc')} />
+    <Choice choice="lizard" onClick={() => pickChoice('li')} />
+    <Choice choice="spock" onClick={() => pickChoice('sp')} />
+    <Choice choice="thumb" onClick={() => pickChoice('th')} />
+    <Choice choice="well" onClick={() => pickChoice('we')} />
   </Wrapper>
 );
 
