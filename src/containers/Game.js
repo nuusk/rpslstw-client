@@ -8,12 +8,13 @@ import Tile from '../components/Tile';
 import Button from '../components/Button';
 import { toJson } from '../helpers/communication';
 import {
-  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY,
+  getToken, newRoom, getRooms, joinRoom, clearRooms, ready, GET_TOKEN, GET_ROOMS, NEW_ROOM, JOIN_ROOM, CLEAR_ROOMS, READY, GAME_STARTED,
 } from '../helpers/events';
 import {
   setCookie, getCookie, TOKEN_COOKIE,
 } from '../helpers/cookies';
 import { fancyWait } from '../helpers/time';
+import ChoicesTable from '../components/ChoicesTable';
 
 export default class Game extends Component {
   constructor() {
@@ -25,8 +26,7 @@ export default class Game extends Component {
     this.resGetRooms = this.resGetRooms.bind(this);
     this.resNewRoom = this.resNewRoom.bind(this);
     this.resJoinRoom = this.resJoinRoom.bind(this);
-
-    this.renderRooms = this.renderRooms.bind(this);
+    this.resGameStarted = this.resGameStarted.bind(this);
 
     this.reqGetToken = this.reqGetToken.bind(this);
     this.reqJoinRoom = this.reqJoinRoom.bind(this);
@@ -34,6 +34,10 @@ export default class Game extends Component {
     this.reqGetRooms = this.reqGetRooms.bind(this);
     this.reqClearRooms = this.reqClearRooms.bind(this);
     this.reqReady = this.reqReady.bind(this);
+    this.reqChoice = this.reqChoice.bind(this);
+
+    this.renderRooms = this.renderRooms.bind(this);
+    this.renderGame = this.renderGame.bind(this);
 
     this.state = {
       rooms: [],
@@ -62,6 +66,7 @@ export default class Game extends Component {
     this.ws.onmessage = this.handleMessage;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   resGetToken(data) {
     setCookie(TOKEN_COOKIE, data.uid);
   }
@@ -77,14 +82,19 @@ export default class Game extends Component {
     });
   }
 
-  resNewRoom(data) {
-    console.log('[resNewRoom]: ');
+  resGameStarted(data) {
+    console.log('[resGameStarted]');
     console.log(data);
   }
 
+  resNewRoom(data) {
+    // console.log('[resNewRoom]: ');
+    // console.log(data);
+  }
+
   resJoinRoom(data) {
-    console.log('[resJoinRoom]: ');
-    console.log(data);
+    // console.log('[resJoinRoom]: ');
+    // console.log(data);
   }
 
   handleMessage(message) {
@@ -97,13 +107,13 @@ export default class Game extends Component {
           case GET_ROOMS: this.resGetRooms(data); break;
           case NEW_ROOM: this.resNewRoom(data); break;
           case JOIN_ROOM: this.resJoinRoom(data); break;
+          case GAME_STARTED: this.resGameStarted(data); break;
           default: break;
         }
       });
   }
 
   reqNewRoom() {
-    console.log('asd');
     this.ws.send(newRoom());
     this.reqGetRooms();
   }
@@ -129,6 +139,10 @@ export default class Game extends Component {
   reqReady() {
     this.ws.send(ready(getCookie(TOKEN_COOKIE)));
     this.reqGetRooms();
+  }
+
+  reqChoice(choice) {
+    this.ws.send(choice(choice, getCookie(TOKEN_COOKIE)));
   }
 
   renderRooms() {
@@ -174,15 +188,21 @@ export default class Game extends Component {
     );
   }
 
+  renderGame() {
+    return (
+      <ChoicesTable pickChoice={this.reqChoice} />
+    );
+  }
+
   render() {
-    const { rooms, isLoading, myRoomID } = this.state;
+    const { isLoading, myRoomID } = this.state;
 
     return (
       <Layout columned narrow>
         <AppHeader />
         <main>
-          <Wall isLoading={isLoading}>
-            {myRoomID ? this.renderGame() : this.renderRooms()}
+          <Wall isLoading={false}>
+            {true ? this.renderGame() : this.renderRooms()}
           </Wall>
         </main>
         <AppFooter />

@@ -6,6 +6,8 @@ export const GET_ROOMS = 'getRooms';
 export const JOIN_ROOM = 'joinRoom';
 export const CLEAR_ROOMS = 'clearRooms';
 export const READY = 'ready';
+export const CHOICE = 'choice';
+export const GAME_STARTED = 'gameStarted';
 
 export const getToken = () => (
   toBlob({
@@ -44,6 +46,14 @@ export const clearRooms = () => (
 export const ready = (token) => (
   toBlob({
     type: READY,
+    token,
+  })
+);
+
+export const choice = (myChoice, token) => (
+  toBlob({
+    type: CHOICE,
+    choice: myChoice,
     token,
   })
 );
