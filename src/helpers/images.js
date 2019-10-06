@@ -71,9 +71,6 @@ const well = [
 export const getWellImage = getRandomImage(well);
 
 export const getImage = (choice) => {
-  console.log('~~~z~~~');
-  console.log(choice);
-  console.log('~~~z~~~');
   switch (choice) {
     case 'rock': return getRandomImage(rock);
     case 'paper': return getRandomImage(paper);
