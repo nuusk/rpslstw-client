@@ -38,11 +38,9 @@ const LinkWrapper = styled.div`
 
 const AppHeader = ({ ...rest }) => (
   <Wrapper {...rest}>
-    <LinkWrapper left>
-    </LinkWrapper>
+    <LinkWrapper left />
     <AppLogo />
-    <LinkWrapper right>
-    </LinkWrapper>
+    <LinkWrapper right />
   </Wrapper>
 );
 

@@ -38,8 +38,7 @@ const LinkWrapper = styled.div`
 
 const AppFooter = ({ ...rest }) => (
   <Wrapper {...rest}>
-    <LinkWrapper left>
-    </LinkWrapper>
+    <LinkWrapper left />
     <LinkWrapper center>
       <span>&copy; 2019 PUT</span>
     </LinkWrapper>

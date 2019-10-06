@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { getLizardImage, getPaperImage, getRockImage, getScizorsImage, getSpockImage, getThumbImage, getWellImage } from '../helpers/images';
+import {
+  getLizardImage, getPaperImage, getRockImage, getScizorsImage, getSpockImage, getThumbImage, getWellImage,
+} from '../helpers/images';
 
 const InnerTile = styled.div`
   background-color: ${({ theme }) => theme.color.palette.isabelline};
