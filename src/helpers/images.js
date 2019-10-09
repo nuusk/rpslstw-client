@@ -72,13 +72,13 @@ export const getWellImage = getRandomImage(well);
 
 export const getImage = (choice) => {
   switch (choice) {
-    case 'rock': return getRandomImage(rock);
-    case 'paper': return getRandomImage(paper);
-    case 'scizors': return getRandomImage(scizors);
-    case 'lizard': return getRandomImage(lizard);
-    case 'spock': return getRandomImage(spock);
-    case 'thumb': return getRandomImage(thumb);
-    case 'well': return getRandomImage(well);
+    case 'rock': case 'ro': return getRandomImage(rock);
+    case 'paper': case 'pa': return getRandomImage(paper);
+    case 'scizors': case 'sc': return getRandomImage(scizors);
+    case 'lizard': case 'li': return getRandomImage(lizard);
+    case 'spock': case 'sp': return getRandomImage(spock);
+    case 'thumb': case 'th': return getRandomImage(thumb);
+    case 'well': case 'we': return getRandomImage(well);
     default: break;
   }
   return '';

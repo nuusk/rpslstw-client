@@ -14,8 +14,9 @@ import {
 import {
   setCookie, getCookie, TOKEN_COOKIE,
 } from '../helpers/cookies';
-import { fancyWait } from '../helpers/time';
+import { fancyWait, seconds } from '../helpers/time';
 import ChoicesTable from '../components/ChoicesTable';
+import ResolveTable from '../components/ResolveTable';
 import ScoreTable from '../components/ScoreTable';
 
 export default class Game extends Component {
@@ -28,6 +29,7 @@ export default class Game extends Component {
     this.resGetRooms = this.resGetRooms.bind(this);
     this.resGameStarted = this.resGameStarted.bind(this);
     this.resChoice = this.resChoice.bind(this);
+    this.resJoinRoom = this.resJoinRoom.bind(this);
 
     this.reqGetToken = this.reqGetToken.bind(this);
     this.reqJoinRoom = this.reqJoinRoom.bind(this);
@@ -47,6 +49,9 @@ export default class Game extends Component {
       yourPoints: 0,
       enemyPoints: 0,
       currentChoice: '',
+      resolveTurn: false,
+      yourMove: '',
+      enemyMove: '',
     };
   }
 
@@ -97,17 +102,54 @@ export default class Game extends Component {
     });
   }
 
+  resJoinRoom() {
+    this.setState({
+      inLobby: true,
+    });
+  }
+
   resChoice(data) {
     console.log('~~~~~~~~~~~~');
-    console.log(data);
-    const { enemyPoints, yourPoints } = this.state;
+    console.log(data.status);
+    const { status } = data;
+
+    const player1 = status[0];
+    const player2 = status[1];
+    let myScore;
+    let enemyScore;
+    let yourMove;
+    let enemyMove;
+
+    if (player1.id === getCookie(TOKEN_COOKIE)) {
+      myScore = player1.score;
+      yourMove = player1.move;
+      enemyScore = player2.score;
+      enemyMove = player2.move;
+    } else {
+      myScore = player2.score;
+      yourMove = player2.move;
+      enemyScore = player1.score;
+      enemyMove = player1.move;
+    }
 
     fancyWait(() => {
       this.setState({
-        enemyPoints: enemyPoints + 1,
-        yourPoints,
+        enemyPoints: enemyScore,
+        yourPoints: myScore,
+        resolveTurn: true,
+        yourMove,
+        enemyMove,
+      }, () => {
+        fancyWait(() => {
+          this.setState({
+            resolveTurn: false,
+            currentChoice: null,
+            yourMove: '',
+            enemyMove: '',
+          });
+        }, seconds(5));
       });
-    })
+    });
   }
 
   handleMessage(message) {
@@ -118,6 +160,7 @@ export default class Game extends Component {
         switch (data.type) {
           case GET_TOKEN: this.resGetToken(data); break;
           case GET_ROOMS: this.resGetRooms(data); break;
+          case JOIN_ROOM: this.resJoinRoom(data); break;
           case GAME_STARTED: this.resGameStarted(data); break;
           case CHOICE: this.resChoice(data); break;
           default: break;
@@ -161,7 +204,7 @@ export default class Game extends Component {
   }
 
   renderRooms() {
-    const { rooms } = this.state;
+    const { rooms, inLobby } = this.state;
 
     return (
       <>
@@ -189,7 +232,7 @@ export default class Game extends Component {
           : (
             <>
               <h1>
-                {'There are no active rooms...'}
+                There are no active rooms...
               </h1>
             </>
           )}
@@ -197,20 +240,32 @@ export default class Game extends Component {
         <h3>
           <Button onClick={this.reqNewRoom}>NEW ROOM</Button>
           <Button onClick={this.reqClearRooms}>CLEAR ROOMS</Button>
-          <Button onClick={this.reqReady}>READY</Button>
+          {inLobby && <Button onClick={this.reqReady}>READY</Button>}
         </h3>
       </>
     );
   }
 
   renderGame() {
-    const { currentChoice } = this.state;
+    const {
+      currentChoice, yourPoints, enemyPoints, resolveTurn, yourMove, enemyMove, youWinTurn,
+    } = this.state;
 
     return (
-      <>
-        <ScoreTable />
-        <ChoicesTable pickChoice={this.reqChoice} currentChoice={currentChoice} />
-      </>
+      resolveTurn
+        ? (
+          <>
+            <ScoreTable you={yourPoints} enemy={enemyPoints} />
+            <ResolveTable yourMove={yourMove} enemyMove={enemyMove} youWin={youWinTurn} />
+          </>
+        )
+        : (
+          <>
+            <ScoreTable you={yourPoints} enemy={enemyPoints} />
+            <ChoicesTable pickChoice={this.reqChoice} currentChoice={currentChoice} />
+          </>
+        )
+
     );
   }
 

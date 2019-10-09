@@ -44,7 +44,23 @@ const InnerTile = styled.div`
 
   ${({ backside }) => backside
     && css`
+    background-color: ${({ theme }) => theme.color.palette.charlestonGreen};
+    -webkit-transform-style: preserve-3d;
+    transition: ${({ theme }) => theme.transition.base};
+    transform: rotate3d(0, 1, 0, 90deg);
     opacity: 0;
+
+    &::after {
+      position: absolute;
+      content: '';
+      right: 0px;
+      bottom: 0px;
+      top: 0px;
+      left: 0px;
+      background: linear-gradient(to right, ${({ theme }) => theme.color.palette.charlestonGreen}, transparent);
+      transform: rotate3d(0, 1, 0, 90deg);
+      -webkit-transform-style: preserve-3d;
+    }
   `}
 `;
 
@@ -71,7 +87,7 @@ export default class Choice extends Component {
     const { choice, onClick, backside } = this.props;
 
     return (
-      <InnerTile imageURL={imageURL} onClick={onClick} backside={backside} >
+      <InnerTile imageURL={imageURL} onClick={onClick} backside={backside}>
         <Overlay>{choice}</Overlay>
       </InnerTile>
     );
